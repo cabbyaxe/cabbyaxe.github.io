@@ -183,6 +183,11 @@ h1, h2, h3, h4, h5, h6 {
     color: white;
 }
 
+/* Mobile Menu Toggle - Hidden on Desktop */
+.mobile-menu-toggle {
+    display: none;
+}
+
 /* Hero Section */
 .hero {
     position: relative;
@@ -225,16 +230,6 @@ h1, h2, h3, h4, h5, h6 {
     object-position: center;
 }
 
-.hero-slider::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(50, 55, 60, 0.6);
-    z-index: 1;
-}
 
 .hero-content {
     display: none;
@@ -1319,7 +1314,7 @@ footer {
     /* Header */
     #header {
         height: auto;
-        padding: 20px 0;
+        padding: 10px 0 20px 0;
     }
 
     #header .container {
@@ -1348,11 +1343,45 @@ footer {
     #secondary-nav .container {
         flex-direction: column;
         padding: 0;
+        position: relative;
     }
 
-    #secondary-nav > .container > ul {
+    /* Mobile Menu Toggle Button */
+    .mobile-menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        height: 50px;
+        background-color: #f0f1eb;
+        color: #32373c;
+        border: none;
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .mobile-menu-toggle:hover {
+        background-color: #e6dc9f;
+    }
+
+    .mobile-menu-toggle .menu-icon {
+        font-size: 24px;
+    }
+
+    /* Hide nav menu by default on mobile */
+    #secondary-nav > .container > ul.nav-menu {
+        display: none;
         flex-direction: column;
         width: 100%;
+    }
+
+    /* Show nav menu when active */
+    #secondary-nav > .container > ul.nav-menu.active {
+        display: flex;
     }
 
     #secondary-nav > .container > ul > li {
@@ -1431,18 +1460,9 @@ footer {
         font-size: 18px;
     }
 
-    /* Hero Section */
+    /* Hide entire hero section on mobile */
     .hero {
-        height: auto;
-        min-height: 400px;
-        flex-direction: column;
-    }
-
-    .hero-sidebar {
-        position: relative;
-        width: 100%;
-        padding: 30px 20px;
-        background-color: rgba(230, 220, 159, 0.45);
+        display: none;
     }
 
     .sidebar-content {
@@ -1766,7 +1786,7 @@ footer {
     }
 
     .pre-footer-call .call-content {
-        flex-direction: column;
+        flex-direction: row;
         gap: 10px;
     }
 

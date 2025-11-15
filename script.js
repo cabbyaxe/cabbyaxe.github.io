@@ -20,116 +20,119 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 // Hero Slider
-let currentSlide = 0;
-const slides = document.querySelectorAll('.hero-slider .slide');
-const dots = document.querySelectorAll('.slider-dots .dot');
-const sidebarContents = document.querySelectorAll('.sidebar-content');
-const totalSlides = slides.length;
-let sliderInterval;
-let currentSidebarContent = 0;
-let sidebarInterval;
+const heroSection = document.querySelector('.hero');
+if (heroSection) {
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.hero-slider .slide');
+    const dots = document.querySelectorAll('.slider-dots .dot');
+    const sidebarContents = document.querySelectorAll('.sidebar-content');
+    const totalSlides = slides.length;
+    let sliderInterval;
+    let currentSidebarContent = 0;
+    let sidebarInterval;
 
-function showSlide(index) {
-    // Remove active class from all slides and dots
-    slides.forEach(slide => slide.classList.remove('active'));
-    dots.forEach(dot => dot.classList.remove('active'));
+    function showSlide(index) {
+        // Remove active class from all slides and dots
+        slides.forEach(slide => slide.classList.remove('active'));
+        dots.forEach(dot => dot.classList.remove('active'));
 
-    // Ensure index wraps around
-    if (index >= totalSlides) {
-        currentSlide = 0;
-    } else if (index < 0) {
-        currentSlide = totalSlides - 1;
-    } else {
-        currentSlide = index;
+        // Ensure index wraps around
+        if (index >= totalSlides) {
+            currentSlide = 0;
+        } else if (index < 0) {
+            currentSlide = totalSlides - 1;
+        } else {
+            currentSlide = index;
+        }
+
+        // Add active class to current slide and dot
+        slides[currentSlide].classList.add('active');
+        dots[currentSlide].classList.add('active');
     }
 
-    // Add active class to current slide and dot
-    slides[currentSlide].classList.add('active');
-    dots[currentSlide].classList.add('active');
-}
+    function showSidebarContent(index) {
+        // Remove active class from all sidebar contents
+        sidebarContents.forEach(content => content.classList.remove('active'));
 
-function showSidebarContent(index) {
-    // Remove active class from all sidebar contents
-    sidebarContents.forEach(content => content.classList.remove('active'));
+        // Ensure index wraps around
+        if (index >= sidebarContents.length) {
+            currentSidebarContent = 0;
+        } else if (index < 0) {
+            currentSidebarContent = sidebarContents.length - 1;
+        } else {
+            currentSidebarContent = index;
+        }
 
-    // Ensure index wraps around
-    if (index >= sidebarContents.length) {
-        currentSidebarContent = 0;
-    } else if (index < 0) {
-        currentSidebarContent = sidebarContents.length - 1;
-    } else {
-        currentSidebarContent = index;
+        // Add active class to current sidebar content
+        sidebarContents[currentSidebarContent].classList.add('active');
     }
 
-    // Add active class to current sidebar content
-    sidebarContents[currentSidebarContent].classList.add('active');
-}
+    function nextSidebarContent() {
+        showSidebarContent(currentSidebarContent + 1);
+    }
 
-function nextSidebarContent() {
-    showSidebarContent(currentSidebarContent + 1);
-}
+    function nextSlide() {
+        showSlide(currentSlide + 1);
+    }
 
-function nextSlide() {
-    showSlide(currentSlide + 1);
-}
+    function prevSlide() {
+        showSlide(currentSlide - 1);
+    }
 
-function prevSlide() {
-    showSlide(currentSlide - 1);
-}
+    function startSlider() {
+        sliderInterval = setInterval(nextSlide, 10000); // Change slide every 10 seconds
+    }
 
-function startSlider() {
-    sliderInterval = setInterval(nextSlide, 10000); // Change slide every 10 seconds
-}
+    function stopSlider() {
+        clearInterval(sliderInterval);
+    }
 
-function stopSlider() {
-    clearInterval(sliderInterval);
-}
+    function startSidebarRotation() {
+        sidebarInterval = setInterval(nextSidebarContent, 10000); // Change sidebar content every 10 seconds
+    }
 
-function startSidebarRotation() {
-    sidebarInterval = setInterval(nextSidebarContent, 10000); // Change sidebar content every 10 seconds
-}
+    function stopSidebarRotation() {
+        clearInterval(sidebarInterval);
+    }
 
-function stopSidebarRotation() {
-    clearInterval(sidebarInterval);
-}
-
-// Initialize slider and sidebar
-showSlide(0);
-showSidebarContent(0);
-startSlider();
-startSidebarRotation();
-
-// Previous/Next button controls
-document.querySelector('.slider-prev').addEventListener('click', () => {
-    stopSlider();
-    prevSlide();
-    startSlider();
-});
-
-document.querySelector('.slider-next').addEventListener('click', () => {
-    stopSlider();
-    nextSlide();
-    startSlider();
-});
-
-// Dot navigation
-dots.forEach((dot, index) => {
-    dot.addEventListener('click', () => {
-        stopSlider();
-        showSlide(index);
-        startSlider();
-    });
-});
-
-// Pause slider and sidebar rotation on hover
-document.querySelector('.hero').addEventListener('mouseenter', () => {
-    stopSlider();
-    stopSidebarRotation();
-});
-document.querySelector('.hero').addEventListener('mouseleave', () => {
+    // Initialize slider and sidebar
+    showSlide(0);
+    showSidebarContent(0);
     startSlider();
     startSidebarRotation();
-});
+
+    // Previous/Next button controls
+    document.querySelector('.slider-prev').addEventListener('click', () => {
+        stopSlider();
+        prevSlide();
+        startSlider();
+    });
+
+    document.querySelector('.slider-next').addEventListener('click', () => {
+        stopSlider();
+        nextSlide();
+        startSlider();
+    });
+
+    // Dot navigation
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            stopSlider();
+            showSlide(index);
+            startSlider();
+        });
+    });
+
+    // Pause slider and sidebar rotation on hover
+    heroSection.addEventListener('mouseenter', () => {
+        stopSlider();
+        stopSidebarRotation();
+    });
+    heroSection.addEventListener('mouseleave', () => {
+        startSlider();
+        startSidebarRotation();
+    });
+}
 
 // Secondary nav shadow on scroll
 let lastScroll = 0;
@@ -147,7 +150,33 @@ window.addEventListener('scroll', () => {
     lastScroll = currentScroll;
 });
 
-// Mobile menu could be added here in the future if needed
+// Mobile menu toggle
+const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+const navMenu = document.querySelector('.nav-menu');
+
+if (mobileMenuToggle) {
+    mobileMenuToggle.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+        mobileMenuToggle.classList.toggle('active');
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('#secondary-nav')) {
+            navMenu.classList.remove('active');
+            mobileMenuToggle.classList.remove('active');
+        }
+    });
+
+    // Close menu when a link is clicked
+    const navLinks = document.querySelectorAll('.nav-menu a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            navMenu.classList.remove('active');
+            mobileMenuToggle.classList.remove('active');
+        });
+    });
+}
 
 // Add fade-in animation on scroll for sections
 const observerOptions = {
